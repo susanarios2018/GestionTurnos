@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Turnos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<style>
+    body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-image: url('fondo.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        #app {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        button{
+            background-color: rgb(56, 56, 216);
+        }
+    </style> 
+
+<body>
+    
+    <div id="app">
+        <h1>Alta de Turno</h1>
+        <form @submit.prevent="altaTurno">
+            <label for="id_turno">Código de turno:</label>
+            <input type="number" id="id_turno" v-model="id_turno" required>
+            <label for="fecha_turno">Fecha de turno:</label>
+            <input type="text" id="fecha_turno" placeholder="YYYY-MM-DD" v-model="fecha_turno" required>
+            <label for="hora_inicio_turno">Hora de turno:</label>
+            <input type="text" id="hora_inicio_turno" placeholder="HH:MM" v-model="hora_inicio_turno" required>
+            <label for="id_paciente">Paciente:</label>
+            <input type="number"  id="id_paciente" v-model="id_paciente" required>
+            <label for="id_profesional">Profesional:</label>
+            <input type="number"  id="id_profesional" v-model="id_profesional" required>
+            <button type="submit">Asignar Turno</button>
+            <div v-if="altaResultado">{{ altaResultado }}</div>
+        </form>
+        
+    </div>
+    
+    <!-- Cargo la biblioteca de vue -->
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        //Defino la constante url que guarda api donde hare la solicitud http
+        const URL = "http://127.0.0.1:5000";
+        const app = Vue.createApp({
+           //se crea el objeto data que retorna los campos del turno y resultado
+            data() {
+                return {
+                    id_turno:'',
+                    fecha_turno:'',
+                    hora_inicio_turno:'',
+                    id_paciente:'',
+                    id_profesional:'',
+                    altaResultado:''
+
+                };
+            },
+            methods: {
+                
+             altaTurno() {
+                  //Se envia una solicitud post al servicio en formato json
+                  fetch(URL + '/turnos', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+
+                },  //para convertir un objeto JavaScript en una cadena json
+                    body: JSON.stringify({
+                      id_turno: this.id_turno,
+                      fecha_turno: this.fecha_turno,
+                      hora_inicio_turno: this.hora_inicio_turno,
+                      id_paciente: this.id_paciente,
+                      id_profesional:this.id_profesional
+                })
+              })
+                  .then(response => response.json())
+                  .then(data => {
+                       //Restablece el formulario cuando agrega el turno con las comillas
+                       if ('message' in data) {
+                         this.id_turno = '';
+                         this.fecha_turno = '';
+                         this.hora_inicio_turno= '';
+                         this.id_paciente = '';
+                         this.id_profesional='';
+                         alert(data.message); // Muestra una alerta con el mensaje de éxito
+                  }    else if ('error' in data){
+                           this.altaResultado = data.error;
+                  } else {
+                          this.altaResultado = 'Alta no efectuada';
+          }
+                })
+                    .catch(error => {
+                       console.error(error);
+                       this.altaResultado = 'Error al realizar la consulta';
+                });
+            },
+            },
+            
+  }
+        );
+
+            app.mount('#app');
+    </script>
+</body>
+
+</html>

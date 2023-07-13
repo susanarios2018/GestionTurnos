@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Turnos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<style>
+    body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-image: url('fondo.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        #app {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        button{
+            background-color: rgb(56, 56, 216);
+        }
+  </style>
+  
+
+<body>
+    <div id="app">
+        
+        <div class="contenedor-centrado">
+            
+            <form @submit.prevent="cancelarTurno">
+                <label for="cancelarTurno">ID Turno:</label>
+                <input type="number" id="cancelarTurno" v-model="cancelarTurno" required>
+                <button type="submit">Cancelar</button>
+                <div v-if="consultaResultado.error" class="error">{{ consultaResultado.error }}</div>
+                 
+                </div>
+            </form>
+        </div>
+
+        
+        
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const URL = "http://127.0.0.1:5000";
+        const app = Vue.createApp({
+            data() {
+                return {
+                    turnos:[],
+                    consultaTurno: '',
+                    consultaResultado: { turno: null, error: '' },
+                    
+                };
+            },
+            methods: {
+                
+                cancelarTurno() {
+                    fetch(`${URL}/eliminaturnos/${this.cancelarTurno}`, {
+                    method: 'DELETE'
+            })
+                   .then(response => response.json())
+                   .then(data => {
+                    if ('message' in data) {
+                        this.consultaResultado.error = '';
+                        this.consultaResultado.turno = null;
+                        alert(data.message); // Muestra una alerta con el mensaje de éxito
+                    }
+                    else if ('error' in data){
+                           this.consultaResultado = data.error;    
+                    } else {
+                        this.consultaResultado.error = 'Turno no encontrado';
+                        this.consultaResultado.turno = null;
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    this.consultaResultado.error = 'Error, no existe el turno que desea eliminar';
+                    this.consultaResultado.turno = null;
+                });
+        }
+    },
+});
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>

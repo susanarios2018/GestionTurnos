@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Turnos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-image: url('fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    min-height: 100vh; 
+  } 
+  button{
+    background-color: rgb(56, 56, 216);
+    }
+  
+</style>
+
+
+<body>
+    
+    <div id="app">
+        <h1>Turnos asignados</h1>
+        <div class="contenedor-centrado">
+            <table>
+                <thead>
+                  <tr>
+                    <th>ID Turno<br></th>
+                    <th>Fecha del turno<br></th>
+                    <th>Hora del turno<br></th>
+                    <th>ID Paciente<br></th>
+                    <th>ID Profesional<br></th>
+                    
+                    
+                    
+                    
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="turno in turnos" :key="turno.turno">
+                    <td>{{ turno['turno'] }}</td>
+                    <td>{{ turno['fecha'] }}</td>
+                    <td>{{ turno['hora'] }}</td>
+                    <td>{{ turno['paciente'] }}</td>
+                    <td>{{ turno['profesional'] }}</td>
+                    
+                    
+                    
+                    
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const URL = "http://127.0.0.1:5000";
+        const app = Vue.createApp({
+            data() {
+                return {
+                    turnos:[],
+                    
+                    
+                };
+            },
+            methods: {
+                
+                mostrarTurnos() {
+                  fetch(`${URL}/consultaturnos`)
+                  .then(response => response.json())
+                  .then(turnos => {
+                  this.turnos = turnos;
+                })
+                  .catch(error => {
+                   console.error(error);
+                });
+            }
+            },
+            mounted() {
+    
+              this.mostrarTurnos();
+  }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>

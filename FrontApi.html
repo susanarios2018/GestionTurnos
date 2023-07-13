@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend API de Productos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+ 
+
+<body>
+    <div id="app">
+        <h1>Consultar Profesional</h1>
+        <div class="contenedor-centrado">
+            <form @submit.prevent="consultarProfesional">
+                <label for="consultaProfesional">ID Profesional:</label>
+                <input type="number" id="consultaProfesional" v-model="consultaProfesional" required>
+                <button type="submit">Consultar</button>
+                <div v-if="consultaResultado.error" class="error">{{ consultaResultado.error }}</div>
+                <div v-if="consultaResultado.profesional">
+                    <h3>ID Profesional: {{ consultaResultado.profesional['ID Profesional'] }}</h3>
+                    <p>Nombre: {{ consultaResultado.profesional.Nombre }}</p>
+                    <p>Apellido: {{ consultaResultado.profesional.Apellido }}</p>
+                    <p>Especialidad: {{ consultaResultado.profesional.Especialidad }}</p>
+                </div>
+            </form>
+        </div>
+
+        <h1>Agenda de profesionales</h1>
+        <div class="contenedor-centrado">
+            <table>
+                <thead>
+                  <tr>
+                    <th>ID Profesional<br></th>
+                    <th>Fecha disponible<br></th>
+                    <th>Hora disponible</th>
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="medico in medicos" :key="medico.Profesional">
+                    <td>{{ medico['Profesional'] }}</td>
+                    <td>{{ medico['fecha'] }}</td>
+                    <td>{{ medico['Hora'] }}</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const URL = "http://127.0.0.1:5000";
+        const app = Vue.createApp({
+            data() {
+                return {
+                    medicos:[],
+                    consultaProfesional: '',
+                    consultaAgenda:'',
+                    consultaResultado: { profesional: null, error: '' },
+                    taResultado: { agenda: null, error: '' },
+                };
+            },
+            methods: {
+                consultarProfesional() {
+                    fetch(`${URL}/profesionales/${this.consultaProfesional}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.length === 0) {
+                                this.consultaResultado.error = 'Profesional no encontrado';
+                                this.consultaResultado.profesional = null;
+                            } else {
+                                this.consultaResultado.error = '';
+                                this.consultaResultado.profesional = data[0];
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            this.consultaResultado.error = 'Error al realizar la consulta';
+                            this.consultaResultado.profesional = null;
+                        });
+                },
+                mostrarAgenda() {
+                  fetch(`${URL}/agenda`)
+                  .then(response => response.json())
+                  .then(medicos => {
+                  this.medicos = medicos;
+                })
+                  .catch(error => {
+                   console.error(error);
+                });
+            }
+            },
+            mounted() {
+    // Llama al método mostrarAgenda() cuando el componente se monta
+              this.mostrarAgenda();
+  }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>

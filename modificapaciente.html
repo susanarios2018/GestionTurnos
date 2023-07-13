@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Turnos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<style>
+  body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-image: url('fondo.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        #app {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        button{
+            background-color: rgb(56, 56, 216);
+        }
+</style> 
+
+<body>
+    <div id="app">
+
+        
+        <form @submit.prevent="modificarPaciente">
+            <label for="modificarId">Código del paciente:</label>
+            <input type="number" id="modificarId" v-model="modificarId" required>
+            <label for="modificarNombre">Nuevo nombre:</label>
+            <input type="text" id="modificarNombre" v-model="modificarNombre" required>
+            <label for="modificarApellido">Nuevo Apellido:</label>
+            <input type="text" id="modificarApellido" v-model="modificarApellido" required>
+            <label for="modificarTelefono">Nuevo Telefono:</label>
+            <input type="number" step="0.01" id="modificarTelefono" v-model="modificarTelefono" required>
+            <button type="submit">Modificar</button>
+            <div v-if="modificarResultado">{{ modificarResultado }}</div>
+        </form>
+    </div>
+
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const URL = "http://127.0.0.1:5000"
+        const app = Vue.createApp({
+          data() {
+            return {
+              pacientes: [],
+              modificarResultado: '',
+              modificarId: '',
+              modificarNombre: '',
+              modificarApellido: '',
+              modificarTelefono: ''
+            };
+          },
+          methods: {
+            modificarPaciente() {
+              fetch(URL + `/modificapaciente/${this.modificarId}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  nombre_paciente: this.modificarNombre,
+                  apellido_paciente: this.modificarApellido,
+                  telefono: this.modificarTelefono
+                })
+              })
+                .then(response => {
+                  if (response.ok) {
+                    this.modificarId= '';
+                    this.modificarNombre = '';
+                    this.modificarApellido = '';
+                    this.modificarTelefono = '';
+                    
+                    this.modificarResultado = 'Modificación realizada';
+                  } else {
+                    this.modificarResultado = 'Modificación no efectuada';
+                  }
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+            },
+            
+          },
+          
+        });
+
+        app.mount('#app');  
+      </script>
+      
+</body>
+
+</html>

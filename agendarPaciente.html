@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Turnos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<style>
+    body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-image: url('fondo.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        #app {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        button{
+            background-color: rgb(56, 56, 216);
+        }
+    </style> 
+
+<body>
+    
+    <div id="app">
+        <h1>Alta de Paciente</h1>
+        <form @submit.prevent="altaPaciente">
+            <label for="id_paciente">ID Paciente:</label>
+            <input type="number" id="id_paciente" v-model="id_paciente" required>
+            <label for="nombre_paciente">Nombre:</label>
+            <input type="text" id="nombre_paciente" v-model="nombre_paciente" required>
+            <label for="apellido_paciente">Apellido:</label>
+            <input type="text" id="apellido_paciente" v-model="apellido_paciente" required>
+            <label for="telefono">Telefono:</label>
+            <input type="number"  id="telefono" v-model="telefono" required>
+            
+            <button type="submit">Agendar Paciente</button>
+            <div v-if="altaResultado">{{ altaResultado }}</div>
+        </form>
+        
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const URL = "http://127.0.0.1:5000";
+        const app = Vue.createApp({
+            data() {
+                return {
+                    id_paciente:'',
+                    nombre_paciente:'',
+                    apellido_paciente:'',
+                    telefono:'',
+                    altaResultado:''
+
+                };
+            },
+            methods: {
+                
+             altaPaciente() {
+                
+                  fetch(URL + '/pacientes', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                },
+                    body: JSON.stringify({
+                      id_paciente: this.id_paciente,
+                      nombre_paciente: this.nombre_paciente,
+                      apellido_paciente: this.apellido_paciente,
+                      telefono: this.telefono,
+                      
+                })
+              })
+                  .then(response => response.json())
+                  .then(data => {
+                       /*if (response.ok) {*/
+                       if ('message' in data) {
+                         this.id_paciente = '';
+                         this.nombre_paciente = '';
+                         this.apellido_paciente= '';
+                         this.telefono = '';
+                         
+                         alert(data.message); // Muestra una alerta con el mensaje de éxito
+                  }    else if ('error' in data){
+                           this.altaResultado = data.error;
+                  } else {
+                          this.altaResultado = 'Alta no efectuada';
+          }
+                })
+                    .catch(error => {
+                       console.error(error);
+                       this.altaResultado = 'Error al realizar la consulta';
+                });
+            },
+            },
+            
+  }
+        );
+
+            app.mount('#app');
+    </script>
+</body>
+
+</html>
+

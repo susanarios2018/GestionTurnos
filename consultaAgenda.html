@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Turnos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-image: url('fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    min-height: 100vh; 
+  } 
+  button{
+    background-color: rgb(56, 56, 216);
+    }
+  </style>
+<body>
+    
+    <div id="app">
+        <h1>Agenda de profesionales</h1>
+        <div class="contenedor-centrado">
+            <table>
+                <thead>
+                  <tr>
+                    <th>ID Profesional<br></th>
+                    <th>Fecha disponible<br></th>
+                    <th>Hora disponible</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="medico in medicos" :key="medico.Profesional">
+                    <td>{{ medico['Profesional'] }}</td>
+                    <td>{{ medico['fecha'] }}</td>
+                    <td>{{ medico['Hora'] }}</td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const URL = "http://127.0.0.1:5000";
+        const app = Vue.createApp({
+            data() {
+                return {
+                    medicos:[],
+                    
+                    
+                };
+            },
+            methods: {
+                
+                mostrarAgenda() {
+                  fetch(`${URL}/agenda`)
+                  .then(response => response.json())
+                  .then(medicos => {
+                  this.medicos = medicos;
+                })
+                  .catch(error => {
+                   console.error(error);
+                });
+            }
+            },
+            
+            mounted() {
+    // Llama al método mostrarAgenda() cuando el componente se monta
+              this.mostrarAgenda();
+  }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>

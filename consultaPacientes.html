@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Turnos</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-image: url('fondo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    min-height: 100vh; 
+  } 
+  button{
+    background-color: rgb(56, 56, 216);
+    }
+  </style>
+
+<body>
+    
+    <div id="app">
+        <h1>Pacientes</h1>
+        <div class="contenedor-centrado">
+            <table>
+                <thead>
+                  <tr>
+                    <th>ID Paciente<br></th>
+                    <th>Nombre<br></th>
+                    <th>Apellido<br></th>
+                    <th>Telefono<br></th>
+                    
+                    
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                  <tr v-for="paciente in pacientes" :key="paciente.Paciente">
+                    <td>{{ paciente['Paciente'] }}</td>
+                    <td>{{paciente['Nombre'] }}</td>
+                    <td>{{ paciente['Apellido'] }}</td>
+                    <td>{{ paciente['Telefono'] }}</td>
+                    
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script>
+        const URL = "http://127.0.0.1:5000";
+        const app = Vue.createApp({
+            data() {
+                return {
+                    pacientes:[],
+                    
+                    
+                };
+            },
+            methods: {
+                
+                mostrarPacientes() {
+                  fetch(`${URL}/consultapacientes`)
+                  .then(response => response.json())
+                  .then(pacientes => {
+                  this.pacientes = pacientes;
+                })
+                  .catch(error => {
+                   console.error(error);
+                });
+            }
+            },
+            mounted() {
+    // Llama al método mostrarPacientes() cuando el componente se monta
+              this.mostrarPacientes();
+  }
+        });
+
+        app.mount('#app');
+    </script>
+</body>
+
+</html>

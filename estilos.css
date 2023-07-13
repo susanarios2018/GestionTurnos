@@ -1,0 +1,140 @@
+/* Estilos para todo el proyecto */
+body {
+    font-family: Arial, sans-serif;
+    /*background-color: #f9f9f9;*/
+}
+
+.contenedor-centrado {
+    display:flex;
+    width: 100%;
+    justify-content: center;
+    background-color: transparent;
+}
+
+p {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #f9f9f9;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    color: rgb(241, 96, 120);
+}
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid lightslategray;
+    border-radius: 5px;
+}
+
+table {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid lightslategray;
+    border-radius: 5px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+}
+
+input[type="submit"] {
+    padding: 10px;
+    /*background-color: #007bff;*/
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/*input[type="submit"]:hover {
+    /*background-color: #0056b3;*/
+/*}*/
+
+button {
+    padding: 8px;
+    margin:4px;
+    background-color: red;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/*button:hover {
+    background-color: #0056b3;}*/
+
+
+a {
+    padding: 8px;
+    margin:4px;
+    background-color: #fdab13;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 85%;
+}
+
+a:hover {
+    background-color: #cd7b00;
+}
+
+.boton-imagen img{
+    
+    width: 50px;
+    height: 50px;
+}
+#app {
+    text-align: center;
+  }
+  
+  .table-container {
+    margin: 20px auto;
+    max-width: 600px;
+    background-color: a;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  tbody tr:hover {
+    background-color: #e6e6e6;
+  }
+  
